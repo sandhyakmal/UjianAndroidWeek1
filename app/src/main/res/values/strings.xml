@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">UjianAndroidWeek1</string>
+
+    <string-array name="sakit">
+        <item>Izin Sakit</item>
+        <item>Izin Anak Sakit</item>
+    </string-array>
+</resources>
