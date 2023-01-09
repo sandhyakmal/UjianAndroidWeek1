@@ -24,16 +24,22 @@ import java.util.*
 
 class IzinActivity : AppCompatActivity() {
 
+    var dt: Boolean = false
+    var tt: Boolean = false
+    var fda = Calendar.getInstance().getTime()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_izin)
 
         btnDariTanggal.setOnClickListener(View.OnClickListener {
+            dt = true
             pickDate(it)
         })
 
         btnSampaiTanggal.setOnClickListener(View.OnClickListener {
-            fixDate(it)
+            tt = true
+            pickDate(it)
         })
 
         imageView.setOnClickListener() {
@@ -123,10 +129,25 @@ class IzinActivity : AppCompatActivity() {
                 c.set(Calendar.MONTH,month)
                 c.set(Calendar.DAY_OF_MONTH,day)
 
-
                 val myFormat = "dd/MM/yyyy"
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
-                txtDariTanggal!!.setText(sdf.format(c.getTime()))
+//                txtDariTanggal!!.setText(sdf.format(c.getTime()))
+                if(dt == true){
+                    fda = c.getTime()
+                    txtDariTanggal.setText(sdf.format(c.getTime()))
+                    dt = false
+                }
+                else if(tt == true){
+                    val tda = c.getTime()
+                    if (tda.compareTo(fda) < 0){
+                        val fdas = fda
+                        Toast.makeText(applicationContext, "Pilih tanggal yang lebih besar dari $fda", Toast.LENGTH_SHORT).show()
+                    }
+                    else if (tda.compareTo(fda) > 0)
+                    {
+                        txtSampaiTanggal.setText(sdf.format(c.getTime()))
+                    }
+                    tt = false}
 
             }
 
@@ -138,34 +159,6 @@ class IzinActivity : AppCompatActivity() {
         ).show()
     }
 
-    fun fixDate(view: View){
-
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
-
-
-        val dateSetListener = object : DatePickerDialog.OnDateSetListener{
-            override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
-                c.set(Calendar.YEAR,year)
-                c.set(Calendar.MONTH,month)
-                c.set(Calendar.DAY_OF_MONTH,day)
-
-
-                val myFormat = "dd/MM/yyyy"
-                val sdf = SimpleDateFormat(myFormat, Locale.US)
-                txtSampaiTanggal!!.setText(sdf.format(c.getTime()))
-
-            }
-
-        }
-        DatePickerDialog(this, dateSetListener,
-            c.get(Calendar.YEAR),
-            c.get(Calendar.MONTH),
-            c.get(Calendar.DAY_OF_MONTH)
-        ).show()
-    }
 
     fun checkValid(view: View){
         if (txtDariTanggal.text.toString().contentEquals("") || txtSampaiTanggal.text.toString().contentEquals("") || txtPerihal.text.toString().contentEquals("") || txtKeterangan.text.toString().contentEquals("")){
@@ -177,3 +170,5 @@ class IzinActivity : AppCompatActivity() {
 
 
 }
+
+
