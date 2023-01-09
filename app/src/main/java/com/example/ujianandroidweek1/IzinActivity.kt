@@ -26,6 +26,11 @@ class IzinActivity : AppCompatActivity() {
 
     var dt: Boolean = false
     var tt: Boolean = false
+
+    var foto1: Boolean = false
+    var foto2: Boolean = false
+    var foto3: Boolean = false
+
     var fda = Calendar.getInstance().getTime()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +48,32 @@ class IzinActivity : AppCompatActivity() {
         })
 
         imageView.setOnClickListener() {
+            foto1 = true
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                    val permissions = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    requestPermissions(permissions, CheckInActivity.REQUEST_CODE_PERMISIONS)
+                } else {
+                    captureCamera()
+                }
+            }
+        }
+
+        imageView2.setOnClickListener() {
+            foto2 = true
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                    val permissions = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    requestPermissions(permissions, CheckInActivity.REQUEST_CODE_PERMISIONS)
+                } else {
+                    captureCamera()
+                }
+            }
+        }
+        imageView3.setOnClickListener() {
+            foto3 = true
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
                         Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
@@ -105,13 +136,27 @@ class IzinActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == CheckInActivity.CAMERA_REQUEST && resultCode == RESULT_CANCELED){
-            Toast.makeText(this, "Gagal Ambil Foto Lampiran", Toast.LENGTH_LONG).show()
-        } else {
-            val bitmapImage = data?.extras?.get("data") as Bitmap
+        if(requestCode == CheckInActivity.CAMERA_REQUEST && resultCode == RESULT_OK){
+            if (foto1 == true){
+                val bitmapImage = data?.extras?.get("data") as Bitmap
+                imageView.setImageBitmap(bitmapImage)
+                foto1 = false
+            } else if (foto2 == true){
+                val bitmapImage = data?.extras?.get("data") as Bitmap
+                imageView2.setImageBitmap(bitmapImage)
+                foto2 = false
+            } else if (foto3 == true){
+                val bitmapImage = data?.extras?.get("data") as Bitmap
+                imageView3.setImageBitmap(bitmapImage)
+                foto3 = false
+            }
+//            val bitmapImage = data?.extras?.get("data") as Bitmap
 //            saveImage(bitmapImage)
-            imageView.setImageBitmap(bitmapImage)
-            Toast.makeText(this, "Berhasil Ambil Foto", Toast.LENGTH_LONG).show()
+//            imageView.setImageBitmap(bitmapImage)
+//            Toast.makeText(this, "Berhasil Ambil Foto", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "Gagal Ambil Foto Lampiran", Toast.LENGTH_LONG).show()
+
         }
     }
 
